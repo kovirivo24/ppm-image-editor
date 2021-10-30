@@ -1,1 +1,1 @@
-# ppm_image-editor
+# ppm-image-editor
