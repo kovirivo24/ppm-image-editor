@@ -1,5 +1,5 @@
 """
-    CS051P Lab Assignments: Lab06 - Image Processing 1
+    Image Processing 1
 
     Author: Kovit Virivong
 
