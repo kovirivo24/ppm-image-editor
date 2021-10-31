@@ -1,5 +1,5 @@
 """
-    Image Processing 1
+    PPM Image Editor
 
     Author: Kovit Virivong
 
