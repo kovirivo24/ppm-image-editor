@@ -143,11 +143,20 @@ def main():
     """
 
     # input and output file name
+    print("Your input file name should be your existing PPM file that you want to edit")
     in_filename = input("input file name:\n\t")
+    print("Your output file name should not be an existing file, or else you risk overwriting it")
     out_filename = input("output file name:\n\t")
+    extension = ".ppm"
+    if extension not in out_filename.lower():
+        print("Warning: your output file does not contain the .ppm extension")
+        ext_input = input("Do you wish to add it?\nHit y for yes\nHit any key for no\n\t")
+        if ext_input == "y":
+            out_filename = out_filename.rstrip() + extension
 
     # lists modifications available
-    print("modifications are:\n\t1. negate\n\t2. greyscale\n\t3. remove red\n\t4. remove green\n\t5. remove blue")
+    print("Modifications available are:\n\t1. Invert color\n\t2. Convert to greyscale\n\t3. Remove red\n\t"
+          "4. Remove green\n\t5. Remove blue")
     valid_mods = "123456"
     desired_mod = (input("enter the number of the desired modification\n\t"))
     # while loop ensures that a number between 1 and 5 is inputted
@@ -175,7 +184,8 @@ def main():
                 file_out.write(remove_color((lines[i]), "green") + "\n")
             elif desired_mod == "5":
                 file_out.write(remove_color((lines[i]), "blue") + "\n")
-
+    print("Image successfully modified")
+    input("Press any key to exit")
 
 if __name__ == '__main__':
     # main_part1()  # comment this out after you check-in for part 1
