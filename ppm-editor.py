@@ -13,6 +13,7 @@
 
 """
 import math
+import string
 
 
 def decode(in_filename, out_filename):
@@ -155,14 +156,45 @@ def main():
             out_filename = out_filename.rstrip() + extension
 
     # lists modifications available
-    print("Modifications available are:\n\t1. Invert color\n\t2. Convert to greyscale\n\t3. Remove red\n\t"
-          "4. Remove green\n\t5. Remove blue")
-    valid_mods = "123456"
+    print("Modifications available are:\n\t0. More info\n\t1. Invert color\n\t2. Convert to greyscale\n\t"
+          "3. Remove red\n\t4. Remove green\n\t5. Remove blue")
+    valid_mods = "0123456"
     desired_mod = (input("enter the number of the desired modification\n\t"))
     # while loop ensures that a number between 1 and 5 is inputted
     while desired_mod not in valid_mods or (len(desired_mod) != 1):
         print("please enter a valid number")
         desired_mod = (input("enter the number of the desired modification\n\t"))
+    if desired_mod == "0":
+        learn_mod = input("Enter the number of the modification you want to learn more about or hit any other"
+                          " key to continue modification:\n\t")
+        while (learn_mod in "12345") and (learn_mod not in string.whitespace) and (len(learn_mod) == 1):
+            if learn_mod == "1":
+                print(
+                    "\tInvert color will perform a color inversion on your image. Every color in the image\n\t"
+                    "will be swapped to its complementary color, or its opposite image on the color wheel.\n\t"
+                    "For example, red will turn green, and blue will turn orange. This can often help make\n\t"
+                    "text easier to read.")
+            elif learn_mod == "2":
+                print(
+                    "\tGreyscale conversion will convert your image to a greyscale image. All colors in the\n\t"
+                    "the image will be converted to shades of grey. This is similar, but different to a \n\t"
+                    "black and white image, where each pixel is either black or white.")
+            elif learn_mod == "3":
+                print(
+                    "\tRemove red will remove all red colors from your image. This means that each pixel\n\t"
+                    "will have its red value set to 0. Removing red colors will make your image appear \n\t"
+                    "cyan tinted.")
+            elif learn_mod == "4":
+                print(
+                    "\tRemove green will remove all green colors from your image. This means that each\n\t"
+                    "pixel will have its green value set to 0. Removing green colors will make your image\n\t"
+                    "appear magenta tinted.")
+            elif learn_mod == "5":
+                print(
+                    "\tRemove blue will remove all blue colors from your image. This means that each pixel\n\t"
+                    "will have its blue value set to 0. Removing blue colors will make your image appear \n\t"
+                    "yellow tinted.")
+            learn_mod = input("Enter another number to learn more or hit any other key to continue\n\t")
 
     # variables assigned to input and output files
     with open(in_filename, "r", encoding="utf-8") as file_in, open(out_filename, "w", encoding="utf-8") as file_out:
