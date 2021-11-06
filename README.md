@@ -10,9 +10,8 @@ Ensure that python 3.9 is installed.
 Run ppm-editor.py and follow instructions in terminal  
     
 ### Upcoming Updates
-- Rewrite program to use dictionaries 
-- Let user preselect multiple modifications
 - Add modifications such as high/low brightness and high/low contrast
+- Add ability to use more common image formats like JPEG
 
 ### About
 This program was part of a Intro to CS assignment.
