@@ -16,3 +16,6 @@ Sample images are included
 - Add modifications such as high/low brightness and high/low contrast
 - Add ability to use more common image formats like JPEG
 
+
+<img width="600" alt="screenshot of Text Analyzer" src="brightnesscomparison.jpg">
+
