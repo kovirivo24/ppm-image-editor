@@ -3,7 +3,7 @@
 
     Author: Kovit Virivong
 
-    Date:   10-28-21
+    Date:   11-07-21
 
     This program contains various functions that can negate, greyscale, or remove red, green, or blue colors from
     an image. The main function asks the user for a modification to perform on a PPM file, and will output a copy
@@ -14,6 +14,48 @@
 """
 import math
 import string
+
+
+def process(lines, rows, cols):
+    """
+    process takes a list of strings and a dimension of rows and columns. It then merges the list into a single string,
+    and then creates a new list of lists, where the amount of lists is the number of rows specified, and the number
+    of pixels (R, G, and B values) is the number columns specified.
+
+    :param lines: (list) list of strings
+    :param rows: (int) number of sublists
+    :param cols: (int) number of ints inside sublist
+    :return: (list) list of lists containing ints
+    """
+
+    # converting list of strings to strings
+    string_lines = ' '.join(lines)
+    processed_lines = []
+    # splitting string into elements in a list
+    total_line = string_lines.split()
+    for row in range(rows):
+        rgb_line = []
+        for i in range((cols * row) * 3, (cols * row + cols) * 3):
+            rgb_line.append(int(total_line[i]))
+        processed_lines.append(rgb_line)
+    return processed_lines
+
+def read_ppm(filename):
+    """
+    read_ppm is a function that opens a user specified file, finds the dimensions of the image in the heading, and
+    converts the RGB values in the file to a list of strings, which it then sends to the process function in
+    conjunction with the dimensions of the file.
+
+    :param filename: (str) location of file and filename
+    :return: (list) list of lists containing ints
+    """
+
+    with open(filename, "r", encoding="utf-8") as file_in:
+        lines = file_in.readlines()
+        # splitting 2nd line of header to split dimensions
+        cols = int(lines[1].split()[0])
+        rows = int(lines[1].split()[1])
+        return process(lines[3:], rows, cols)
 
 
 def rgb_bound(rgb_value):
@@ -84,7 +126,7 @@ def negate(line):
     :return: (str) string of negated RGB values
     """
 
-    rgb_line = line.split()
+    rgb_line = line
     # initialize new list
     negated_line = []
     # for loop going through each element (RGB value) in list
@@ -105,7 +147,7 @@ def grey_scale(line):
     :return: (str) string of grey values
     """
 
-    rgb_line = line.split()
+    rgb_line = line
     # initialize new list
     greyscale_line = []
     # for loop going through every third element starting with the first
@@ -132,9 +174,7 @@ def remove_color(line, color):
     :return: (str) string of RGB values with removed color
     """
 
-    rgb_line = line.split()
-    # create a copy of rgb_line
-    removed_line = list(rgb_line)
+    rgb_line = [str(i) for i in line]
     # initialize variable
     clr = None
     # sets starting point for for loop depending on color
@@ -146,9 +186,9 @@ def remove_color(line, color):
         clr = 2
     # sets R,G, or B to 0
     for i in range(clr, len(rgb_line), 3):
-        removed_line[i] = '0'
-    removed_line = ' '.join(removed_line)
-    return removed_line
+        rgb_line[i] = '0'
+    rgb_line = ' '.join(rgb_line)
+    return rgb_line
 
 
 def brightness(line, bright_value):
@@ -160,7 +200,7 @@ def brightness(line, bright_value):
     :param bright_value: (int) brightness change percentage
     :return: (str) string of RGB values with changed brightness
     """
-    rgb_line = line.split()
+    rgb_line = line
     # initialize new list
     brightness_line = []
     # for loop going through every third element starting with the first
@@ -259,15 +299,19 @@ def main():
                 print("Please enter a valid integer")
                 bright_value = input("What percentage brightness would you like to change it by?\n\t")
 
+    try:
+        lines = read_ppm(in_filename)
+    except IOError:
+        print("problem opening file: " + in_filename)
     # variables assigned to input and output files
-    with open(in_filename, "r", encoding="utf-8") as file_in, open(out_filename, "w", encoding="utf-8") as file_out:
-        # lines in input file read
-        lines = file_in.readlines()
-        # header written to output file
-        for i in range(3):
-            file_out.write(lines[i])
+    with open(out_filename, "w", encoding="utf-8") as file_out:
+        # header written out
+        file_out.write("P3\n")
+        # writing dimensions by counting length of pixels and number of rows
+        file_out.write(str(len(lines[0]) // 3) + " " + str(len(lines)) + "\n")
+        file_out.write("255\n")
         # body written to output file - for loop starts at 4th line and ends at last line
-        for i in range(3, len(lines)):
+        for i in range(len(lines)):
             # if statements change which function is used depending on modification selected
             if desired_mod == "1":
                 file_out.write(negate(lines[i]) + "\n")
@@ -287,5 +331,4 @@ def main():
 
 
 if __name__ == '__main__':
-    # main_part1()  # comment this out after you check-in for part 1
-    main()  # uncomment this after you check-in for part 1
+    main()
