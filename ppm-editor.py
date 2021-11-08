@@ -250,7 +250,14 @@ def main():
             print("please enter a valid number")
             desired_mod = (input("enter the number of the desired modification\n\t"))
     if desired_mod == "6":
-        bright_value = int(input("brightness?\n\t"))
+        bright_value = input("What percentage brightness would you like to change it by?\n\t")
+        while True:
+            try:
+                bright_value = int(bright_value)
+                break
+            except:
+                print("Please enter a valid integer")
+                bright_value = input("What percentage brightness would you like to change it by?\n\t")
 
     # variables assigned to input and output files
     with open(in_filename, "r", encoding="utf-8") as file_in, open(out_filename, "w", encoding="utf-8") as file_out:
@@ -273,7 +280,7 @@ def main():
             elif desired_mod == "5":
                 file_out.write(remove_color((lines[i]), "blue") + "\n")
             elif desired_mod == "6":
-                file_out.write(brightness((lines[i]), bright_value) + "\n")
+                file_out.write(brightness((lines[i]), int(bright_value)) + "\n")
 
     print("Image successfully modified")
     input("Press any key to exit")
