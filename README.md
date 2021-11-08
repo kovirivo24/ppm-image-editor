@@ -8,8 +8,8 @@ This program is able to edit PPM images with 6 user selected modifications. Modi
 ### Usage  
 Ensure that python 3.9 is installed.  
 **Ensure that ppm file is in the same folder as python file**  
-Run ppm-editor.py and follow instructions in terminal
-Directory should be included with filename
+Run ppm-editor.py and follow instructions in terminal  
+Directory should be included with filename  
 Sample images are included
     
 ### Upcoming Updates
