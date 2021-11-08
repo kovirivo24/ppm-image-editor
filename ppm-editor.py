@@ -16,6 +16,23 @@ import math
 import string
 
 
+def rgb_bound(rgb_value):
+    """
+    rgb_bound ensures that RGB values stay between 0 and 255.
+
+    :param rgb_value: (int) RGB value
+    :return: (int) changed RGB value if previous was > 255 or < 0, not changed otherwise
+    """
+
+    # upper bound
+    if rgb_value > 255:
+        rgb_value = 255
+    # lower bound
+    elif rgb_value < 0:
+        rgb_value = 0
+    return rgb_value
+
+
 def decode(in_filename, out_filename):
     """
     decode takes in a PPM file and decodes its RGB values and writes it into a new PPM file. This will output a decoded
@@ -134,6 +151,33 @@ def remove_color(line, color):
     return removed_line
 
 
+def brightness(line, bright_value):
+    """
+    brightness changes the brightness of each pixel by increasing or decreasing the RGB average value
+    by user specifications.
+
+    :param line: (str) string of RGB values
+    :param bright_value: (int) brightness change percentage
+    :return: (str) string of RGB values with changed brightness
+    """
+    rgb_line = line.split()
+    # initialize new list
+    brightness_line = []
+    # for loop going through every third element starting with the first
+    for i in range(0, len(rgb_line), 3):
+        # current pixel brightness calculated from set of RGB values
+        current_brightness = (int(rgb_line[i]) + int(rgb_line[i + 1]) + int(rgb_line[i + 2])) / 3
+        # pixel brightness multiplied by new brightness percentage added to each RGB value
+        newbright_r = int(rgb_line[i]) + (current_brightness * (bright_value / 100))
+        newbright_g = int(rgb_line[i + 1]) + (current_brightness * (bright_value / 100))
+        newbright_b = int(rgb_line[i + 2]) + (current_brightness * (bright_value / 100))
+        # R, G, B values (one set of RGB) with new brightness values added to new list
+        brightness_line.extend([str(int(rgb_bound(newbright_r))), str(int(rgb_bound(newbright_g))),
+                                str(int(rgb_bound(newbright_b)))])
+    brightness_line = ' '.join(brightness_line)
+    return brightness_line
+
+
 def main():
     """
     The main function asks for an input and output filename. It will then ask for a desired modification through
@@ -157,17 +201,18 @@ def main():
 
     # lists modifications available
     print("Modifications available are:\n\t0. More info\n\t1. Invert color\n\t2. Convert to greyscale\n\t"
-          "3. Remove red\n\t4. Remove green\n\t5. Remove blue")
+          "3. Remove red\n\t4. Remove green\n\t5. Remove blue\n\t6. Change brightness")
     valid_mods = "0123456"
     desired_mod = (input("enter the number of the desired modification\n\t"))
+    bright_value = 0
     # while loop ensures that a number between 1 and 5 is inputted
     while desired_mod not in valid_mods or (len(desired_mod) != 1):
         print("please enter a valid number")
         desired_mod = (input("enter the number of the desired modification\n\t"))
-    if desired_mod == "0":
-        learn_mod = input("Enter the number of the modification you want to learn more about or hit any other"
+    while desired_mod == "0":
+        learn_mod = input("Enter the number of the modification you want to learn more about or hit any"
                           " key to continue modification:\n\t")
-        while (learn_mod in "12345") and (learn_mod not in string.whitespace) and (len(learn_mod) == 1):
+        while (learn_mod in "123456") and (learn_mod not in string.whitespace) and (len(learn_mod) == 1):
             if learn_mod == "1":
                 print(
                     "\tInvert color will perform a color inversion on your image. Every color in the image\n\t"
@@ -194,7 +239,18 @@ def main():
                     "\tRemove blue will remove all blue colors from your image. This means that each pixel\n\t"
                     "will have its blue value set to 0. Removing blue colors will make your image appear \n\t"
                     "yellow tinted.")
-            learn_mod = input("Enter another number to learn more or hit any other key to continue\n\t")
+            elif learn_mod == "6":
+                print(
+                    "Change brightness will change the brightness of your image. It does this by asking you what"
+                    "percentage you want to change your brightness by and applies that percentage to each pixel."
+                )
+            learn_mod = input("Enter another number to learn more or hit enter to continue\n\t")
+        desired_mod = (input("enter the number of the desired modification\n\t"))
+        while desired_mod not in valid_mods or (len(desired_mod) != 1):
+            print("please enter a valid number")
+            desired_mod = (input("enter the number of the desired modification\n\t"))
+    if desired_mod == "6":
+        bright_value = int(input("brightness?\n\t"))
 
     # variables assigned to input and output files
     with open(in_filename, "r", encoding="utf-8") as file_in, open(out_filename, "w", encoding="utf-8") as file_out:
@@ -216,8 +272,12 @@ def main():
                 file_out.write(remove_color((lines[i]), "green") + "\n")
             elif desired_mod == "5":
                 file_out.write(remove_color((lines[i]), "blue") + "\n")
+            elif desired_mod == "6":
+                file_out.write(brightness((lines[i]), bright_value) + "\n")
+
     print("Image successfully modified")
     input("Press any key to exit")
+
 
 if __name__ == '__main__':
     # main_part1()  # comment this out after you check-in for part 1
